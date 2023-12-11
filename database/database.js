@@ -32,8 +32,8 @@ var mysql = require('mysql');
 const client = mysql.createConnection({
   host: 'sql8.freemysqlhosting.net',
   user: 'sql8669541',
-  password: 'EdvBgRv8sW',
   port:"3306",
+  password: 'EdvBgRv8sW',
   database: 'sql8669541',
 });
 
