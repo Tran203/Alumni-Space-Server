@@ -14,8 +14,6 @@ const router = express.Router();
 //connecting to database
 
 var client = require('../database/database');
-const { password } = require('pg/lib/defaults');
-const { NEWDATE } = require('mysql/lib/protocol/constants/types');
 
 //Middleware
 router.use(bodyParser.json());
