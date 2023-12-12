@@ -83,11 +83,11 @@ CREATE TABLE Event(
     event_id SERIAL PRIMARY KEY,
     alumni_id INT REFERENCES Alumni_Space_Account(account_id) ,
     event_title VARCHAR(50) NOT NULL,
-    event_description VARCHAR(100) NOT NULL,
+    event_description VARCHAR(255) NOT NULL,
     date_posted DateTime,
     event_date DateTime,
     deadline DateTime,
-    pic_file VARCHAR(255) NOT NULL
+    event_file VARCHAR(255) NOT NULL
 );
 
 
