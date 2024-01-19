@@ -31,14 +31,23 @@ var mysql = require('mysql');
 
 const client = mysql.createConnection({
   host: 'sql8.freemysqlhosting.net',
-  username: 'sql8678150',
+  user: 'sql8678150',
   port:"3306",
   password: 'v5S8La6HLQ',
   database: 'sql8678150',
 });
 
-  client.on('connection', (connection) => {
-    console.log('Connected to database');
-  });
+  // client.on('connection', (connection) => {
+  //   console.log('Connected to database');
+  // });
+
+  //connect to database
+client.connect((err) => {
+  if (err){
+      console.log(err);
+  }else{
+      console.log('connection succeded');
+  }
+})
   
   module.exports = client;

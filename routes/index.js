@@ -58,7 +58,7 @@ router.post('/api/login', (req, res) => {
   const receivedData = req.body;
   console.log('Received data:', receivedData);
 
-  const selectUserSQL = "SELECT account_id, role FROM Alumni_Space_Account WHERE email = ? AND password = ?";
+  const selectUserSQL = "SELECT account_id, role FROM alumni_space_account WHERE email = ? AND password = ?";
   var sql;
 
   client.query(selectUserSQL, [receivedData.email, receivedData.password], function (err, result) {
@@ -75,9 +75,9 @@ router.post('/api/login', (req, res) => {
         console.log('Account ' + account_id + ' has been found successful!');
 
         if (role == "Alumni") {
-          sql = "SELECT * FROM Tut_Alumni where account_id = ?";
+          sql = "SELECT * FROM tut_alumni where account_id = ?";
         } else {
-          sql = "SELECT * FROM Administrator where account_id = ?";
+          sql = "SELECT * FROM administrator where account_id = ?";
         }
         //query to get user details
         client.query(sql, [account_id], function (err, result) {
@@ -113,26 +113,26 @@ router.post('/api/register', (req, res) => {
 
   //DATABASE SCRIPTS HERE
   var registerQuery;
-  insertDetailsSQL = "INSERT INTO Alumni_Space_Account(email,password,role) " + " VALUES (?,?,?)";
+  insertDetailsSQL = "INSERT INTO alumni_space_account(email,password,role) " + " VALUES (?,?,?)";
   role = "Alumni";
 
   if (role == "Alumni") {
     // SQL
     registerQuery =
-      "INSERT INTO Tut_Alumni(account_id,name, surname) " + " VALUES (?,?,?)";
+      "INSERT INTO tut_alumni(account_id,name, surname) " + " VALUES (?,?,?)";
 
     userDetailsFields = [null, receivedData.fullname, receivedData.surname];
   } else if (role == "Admin") {
     // SQL
     registerQuery =
-      "INSERT INTO Administrator (name, surname) " + " VALUES (?,?)";
+      "INSERT INTO administrator (name, surname) " + " VALUES (?,?)";
 
     userDetailsFields = [receivedData.fullname, receivedData.surname];
   }
 
 
   //DATABASE INTERACTION STARTS HERE
-  // Query insert into Alumni_Space_Account
+  // query insert into alumni_space_account
   client.query(insertDetailsSQL, [receivedData.email, receivedData.password, role], function (err, result) {
     if (err) {
       console.error(err);
@@ -154,7 +154,7 @@ router.post('/api/register', (req, res) => {
           console.log("Registration successful!");
 
           //create profile for user
-          client.query("INSERT INTO UserProfile(account_id) " + " VALUES(?)", [accountId], function (err, result) {
+          client.query("INSERT INTO userprofile(account_id) " + " VALUES(?)", [accountId], function (err, result) {
             if (err) {
               throw err;
             } else {
@@ -179,7 +179,7 @@ router.put('/adminForgot-password', async (req, res) => {
   var password = req.body.password;
   console.log('Received data for updating password:', receivedData);
 
-  const updatePasswordSQL = `UPDATE Administrator SET password = ? WHERE email = ?`;
+  const updatePasswordSQL = `UPDATE administrator SET password = ? WHERE email = ?`;
 
 
   client.query(updatePasswordSQL, [password, email], (err, result) => {
@@ -208,7 +208,7 @@ router.put('/api/adminProfile/update/:admin_id', (req, res) => {
   res.status(200).json({ message: 'Data received on the server for updating profile', data: receivedData });
 
   
-  const updateProfileSQL = `UPDATE Administrator SET name = ?, surname = ?, email = ?, address = ?, contact_no = ?`;
+  const updateProfileSQL = `UPDATE administrator SET name = ?, surname = ?, email = ?, address = ?, contact_no = ?`;
 
   client.query(
     updateProfileSQL,
@@ -238,7 +238,7 @@ router.put('/forgot-password', async (req, res) => {
   // Check if the email exists in the database
   console.log('Received data for updating password:', receivedData);
 
-  const updatePasswordSQL = `UPDATE Alumni_Space_Account SET password = ? WHERE email = ?`;
+  const updatePasswordSQL = `UPDATE alumni_space_account SET password = ? WHERE email = ?`;
 
 
   client.query(updatePasswordSQL, [password, email], (err, result) => {
@@ -275,7 +275,7 @@ router.post('/api/userprofile', (req, res) => {
   var bio = req.body.bio;
 
   const insertProfileSQL = `
-    INSERT INTO UserProfile (contact_no, education, achievement, skills, experience, enterest, bio) VALUES (?,?,?,?,?,?,?)`;
+    INSERT INTO userprofile (contact_no, education, achievement, skills, experience, enterest, bio) VALUES (?,?,?,?,?,?,?)`;
   console.log(receivedData.education);
 
   client.query(insertProfileSQL, [contact_no, education, achievement, skills, experience, interest, bio], (err, result) => {
@@ -317,8 +317,8 @@ router.put('/api/profile/update/:user_id', (req, res) => {
   // Send a response back to the client
   res.status(200).json({ message: 'Data received on the server for updating profile', data: receivedData });
 
-  // SQL query to update UserProfile table by user_id
-  const updateProfileSQL = `UPDATE UserProfile SET location = ?, qualification = ?, employment_status = ?, skills = ?, experience = ?, interest = ?, bio = ? WHERE account_id = ? `;
+  // SQL query to update userprofile table by user_id
+  const updateProfileSQL = `UPDATE userprofile SET location = ?, qualification = ?, employment_status = ?, skills = ?, experience = ?, interest = ?, bio = ? WHERE account_id = ? `;
 
   //const { contact_no, education, achievement, skills, experience, interest, bio } = updatedData;
 
@@ -346,10 +346,10 @@ router.put('/api/profile/get_profile', (req, res) => {
   // SQL query to retrieve a user profile by user_id
 //   const getProfileSQL = `
 //   SELECT ta.certificateName, ta.filePath, up.*
-//   FROM Certificates ta
-//   JOIN UserProfile up ON ta.account_id = up.account_id
+//   FROM certificates ta
+//   JOIN userprofile up ON ta.account_id = up.account_id
 // `;
-  const getProfileSQL = `SELECT * FROM UserProfile WHERE account_id = ?`;
+  const getProfileSQL = `SELECT * FROM userprofile WHERE account_id = ?`;
   
 
   client.query(getProfileSQL, [user_id], (err, result) => {
@@ -371,7 +371,7 @@ router.get('/api/profile/get_my_certs/:account_id', (req,res) => {
   var account_id = req.params.account_id;
 
   //slq
-  var sql = 'SELECT * FROM Certificates WHERE account_id = ?';
+  var sql = 'SELECT * FROM certificates WHERE account_id = ?';
 
   //query
   client.query(sql, [account_id], (err, result) => {
@@ -394,7 +394,7 @@ router.get('/api/profile/get_my_pic/:account_id', (req, res) => {
   // SQL
   var sql = 'SELECT pic_file FROM userprofile WHERE account_id = ?';
 
-  // Query
+  // query
   client.query(sql, [account_id], (err, result) => {
     if (err) {
       console.error(err);
@@ -413,7 +413,7 @@ router.get('/api/profile/get_my_pic/:account_id', (req, res) => {
 router.delete('/api/profile/delete_my_cert/:certificateId', (req, res) => {
   const certificateId = req.params.certificateId;
   // SQL query to delete a job by its ID
-  const sql = 'DELETE FROM Certificates WHERE certificateId = ?';
+  const sql = 'DELETE FROM certificates WHERE certificateId = ?';
 
   client.query(sql, [certificateId], (err, result) => {
     if (err) {
@@ -435,11 +435,11 @@ router.delete('/api/profile/delete_my_cert/:certificateId', (req, res) => {
 //selecting all userprofiles
 
 router.get('/api/profile/profiles', (req, res) => {
-  // SQL query to select profiles with names from Tut_Alumni and additional information from UserProfile
+  // SQL query to select profiles with names from tut_alumni and additional information from userprofile
   const selectProfilesSQL = `
     SELECT ta.name, ta.surname, up.*
-    FROM Tut_Alumni ta
-    JOIN UserProfile up ON ta.account_id = up.account_id
+    FROM tut_alumni ta
+    JOIN userprofile up ON ta.account_id = up.account_id
   `;
 
   client.query(selectProfilesSQL, (err, result) => {
@@ -741,14 +741,14 @@ router.post('/api/jobs/applyjob', upload.fields([
   if (!req.files) {
     //if no files
     console.log('Nothing...'+additional_documentFile);
-    insertApplicationSQL = `INSERT INTO Applications (account_id, job_title, job_description,application_status, application_date) VALUES ( ?, ?, ?, ?, ?)`;
+    insertApplicationSQL = `INSERT INTO applications (account_id, job_title, job_description,application_status, application_date) VALUES ( ?, ?, ?, ?, ?)`;
     values = [alumni_id, job_title, job_description, 'pending', application_date];
   } else if (!req.files.additional_document) {
     //if only id is added
     const idDocumentFile = req.files['id_document'][0];
     console.log('Sing id...'+idDocumentFile);
     const idDocumentFileName = `${applicationId}_${idDocumentFile.originalname}`;
-    insertApplicationSQL = `INSERT INTO Applications (account_id, job_title, job_description,application_status, application_date,id_document) VALUES ( ?, ?, ?, ?, ?,?)`;
+    insertApplicationSQL = `INSERT INTO applications (account_id, job_title, job_description,application_status, application_date,id_document) VALUES ( ?, ?, ?, ?, ?,?)`;
     values = [alumni_id, job_title, job_description, 'pending', application_date, idDocumentFileName];
     //save
     fs.renameSync(idDocumentFile.path, `${applicationDirectory}/${idDocumentFileName}`);
@@ -757,7 +757,7 @@ router.post('/api/jobs/applyjob', upload.fields([
     const additional_documentFile = req.files['additional_document'][0];
     console.log('Single add...'+additional_documentFile);
     const additional_documentName = `${applicationId}_${additional_documentFile.originalname}`;
-    insertApplicationSQL = `INSERT INTO Applications (account_id, job_title, job_description,application_status, application_date,additional_document) VALUES ( ?, ?, ?, ?, ?,?)`;
+    insertApplicationSQL = `INSERT INTO applications (account_id, job_title, job_description,application_status, application_date,additional_document) VALUES ( ?, ?, ?, ?, ?,?)`;
     values = [alumni_id, job_title, job_description, 'pending', application_date, additional_documentName];
     fs.renameSync(additional_documentFile.path, `${applicationDirectory}/${additional_documentName}`);
   } else {
@@ -768,7 +768,7 @@ router.post('/api/jobs/applyjob', upload.fields([
     const additional_documentName = `${applicationId}_${additional_documentFile.originalname}`;
     console.log('Both...'+additional_documentFile);
 
-    insertApplicationSQL = `INSERT INTO Applications (account_id, job_title, job_description,application_status, application_date,id_document,additional_document) VALUES ( ?, ?, ?, ?, ?,?,?)`;
+    insertApplicationSQL = `INSERT INTO applications (account_id, job_title, job_description,application_status, application_date,id_document,additional_document) VALUES ( ?, ?, ?, ?, ?,?,?)`;
     values = [alumni_id, job_title, job_description, 'pending', application_date, idDocumentFileName, additional_documentName];
 
     fs.renameSync(idDocumentFile.path, `${applicationDirectory}/${idDocumentFileName}`);
@@ -816,15 +816,15 @@ router.get('/api/jobs/applications', (req, res) => {
   s.application_date,
   GROUP_CONCAT(DISTINCT JSON_OBJECT('certificateName', c.certificateName, 'filePath', c.filePath)) as certificates
 FROM
-  Tut_Alumni a
+  tut_alumni a
 LEFT JOIN
-  Applications s ON a.account_id = s.account_id
+  applications s ON a.account_id = s.account_id
 LEFT JOIN
-  UserProfile u ON a.account_id = u.account_id
+  userprofile u ON a.account_id = u.account_id
 LEFT JOIN
-  Alumni_Space_Account ac ON a.account_id = ac.account_id
+  alumni_space_account ac ON a.account_id = ac.account_id
 LEFT JOIN
-  Certificates c ON a.account_id = c.account_id
+  certificates c ON a.account_id = c.account_id
 WHERE
   s.application_status = 'pending'
 GROUP BY
@@ -862,7 +862,7 @@ router.get('/api/jobs/trackApp/:account_id', (req, res) => {
       s.application_date,
       s.application_status
     FROM
-      Applications s
+      applications s
     WHERE
       s.account_id = ?;
   `;
@@ -887,7 +887,7 @@ router.get('/api/jobs/trackApp/:account_id', (req, res) => {
 
 
 
-//Add Event
+//Add event
 router.post('/api/events/add', upload.single('file'), function (req, res) {
   var event_title = req.body.event_title;
   var event_description = req.body.event_description;
@@ -902,11 +902,11 @@ router.post('/api/events/add', upload.single('file'), function (req, res) {
   if (!req.file) {
     //if event pic is null
 
-    insertEventSQL = `INSERT INTO Event (event_title, event_description, date_posted, event_date) VALUES (?, ?, ?, ?)`;
+    insertEventSQL = `INSERT INTO event (event_title, event_description, date_posted, event_date) VALUES (?, ?, ?, ?)`;
     values = [event_title, event_description, date_posted, event_date];
 
   } else {
-    insertEventSQL = `INSERT INTO Event (event_title, event_description, date_posted, event_date, event_file) VALUES (?, ?, ?, ?, ?)`;
+    insertEventSQL = `INSERT INTO event (event_title, event_description, date_posted, event_date, event_file) VALUES (?, ?, ?, ?, ?)`;
     values = [event_title, event_description, date_posted, event_date, req.file.originalname];
 
     //imag var
@@ -930,8 +930,8 @@ router.post('/api/events/add', upload.single('file'), function (req, res) {
         console.error(err);
         res.status(500).send('An error occurred during event insertion.');
       } else {
-        console.log('Event inserted successfully!');
-        res.status(200).json({ message: 'Event and file information saved successfully!' });
+        console.log('event inserted successfully!');
+        res.status(200).json({ message: 'event and file information saved successfully!' });
       }
     }
   );
@@ -944,7 +944,7 @@ router.get('/api/event/:id', function (req, res) {
 
 
   // SQL query to select a job by its ID
-  const selectJobSQL = 'SELECT * FROM Event WHERE event_id = ?';
+  const selectJobSQL = 'SELECT * FROM event WHERE event_id = ?';
 
   client.query(selectJobSQL, [eventId], (err, result) => {
     if (err) {
@@ -954,9 +954,9 @@ router.get('/api/event/:id', function (req, res) {
       if (result && result.length > 0) {
         //console.log("something");
         const user = result[0];
-        res.status(200).json({ message: 'Event id retrieved successfully', data: user });
+        res.status(200).json({ message: 'event id retrieved successfully', data: user });
       } else {
-        res.status(404).send('Event not found.');
+        res.status(404).send('event not found.');
       }
     }
   });
@@ -967,7 +967,7 @@ router.get('/api/event/:id', function (req, res) {
 //Get all events
 router.get('/api/events', (req, res) => {
   // SQL query to select all events
-  const selectAllEventsSQL = 'SELECT * FROM Event';
+  const selectAllEventsSQL = 'SELECT * FROM event';
 
   client.query(selectAllEventsSQL, (err, result) => {
     if (err) {
@@ -979,7 +979,7 @@ router.get('/api/events', (req, res) => {
 
         for (let i = 0; i < result.length; i++) {
           if (result[i].event_file === '') {
-            console.log('Event has no picture');
+            console.log('event has no picture');
           } else {
             pictures.push({ filePath: result[i].event_file });
           }
@@ -1012,7 +1012,7 @@ router.put('/api/event/:event_id', (req, res) => {
   res.status(200).json({ message: 'Data received on the server for updating event', data: receivedData });
 
   // SQL query to update Job table by job_id
-  const updateEventSQL = `UPDATE Event SET event_title = ?, event_description = ?, event_date = ? WHERE event_id = ?`;
+  const updateEventSQL = `UPDATE event SET event_title = ?, event_description = ?, event_date = ? WHERE event_id = ?`;
 
   client.query(
     updateEventSQL,
@@ -1022,7 +1022,7 @@ router.put('/api/event/:event_id', (req, res) => {
         console.error(err);
         res.status(500).send('An error occurred during event update.');
       } else {
-        console.log('Event updated successfully!');
+        console.log('event updated successfully!');
       }
     }
   );
@@ -1033,19 +1033,19 @@ router.delete('/api/events/delete/:event_id', (req, res) => {
   const event_id = req.params.event_id;
   console.log(event_id);
 
-  const deleteEventSQL = 'DELETE FROM Event WHERE event_id = ?';
+  const deleteEventSQL = 'DELETE FROM event WHERE event_id = ?';
 
   client.query(deleteEventSQL, [event_id], (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ message: 'An error occurred during Event deletion.' });
+      return res.status(500).json({ message: 'An error occurred during event deletion.' });
     } else {
       if (result.affectedRows > 0) {
-        console.log('Event deleted successfully!');
-        return res.status(200).json({ message: 'Event deleted successfully.' });
+        console.log('event deleted successfully!');
+        return res.status(200).json({ message: 'event deleted successfully.' });
       } else {
 
-        return res.status(404).json({ message: 'Event not found.' });
+        return res.status(404).json({ message: 'event not found.' });
       }
     }
   });
@@ -1055,12 +1055,12 @@ router.delete('/api/events/delete/:event_id', (req, res) => {
 //auto deleting event
 router.delete('/api/events/deleteEvent', (req, res) => {
 
-  const selectAllEventsSQL = 'SELECT * FROM Event';
+  const selectAllEventsSQL = 'SELECT * FROM event';
 
   client.query(selectAllEventsSQL, (err, result) => {
     if (err) {
       console.error(err);
-      res.status(500).send('An error occurred while fetching Event.');
+      res.status(500).send('An error occurred while fetching event.');
     } else {
       if (result && result.length > 0) {
         const currentTime = new Date();
@@ -1073,21 +1073,21 @@ router.delete('/api/events/deleteEvent', (req, res) => {
 
           if (currentTime >= eventDeadline) {
 
-            const deleteEventSQL = 'DELETE FROM Event WHERE event_id = ?';
+            const deleteEventSQL = 'DELETE FROM event WHERE event_id = ?';
             client.query(deleteEventSQL, [result[i].event_id], (err, result) => {
               if (err) {
                 console.error(err);
-                return res.status(500).json({ message: 'An error occurred during Event deletion.' });
+                return res.status(500).json({ message: 'An error occurred during event deletion.' });
               }
-              console.log('Event deleted successfully: ');
+              console.log('event deleted successfully: ');
             });
           } else {
-            console.log('Event ' + result[i].event_title + ' is not expiring today.');
+            console.log('event ' + result[i].event_title + ' is not expiring today.');
           }
         }
-        res.json({ message: 'Expired Event will be deleted' });
+        res.json({ message: 'Expired event will be deleted' });
       } else {
-        res.json({ message: 'No expired Event to delete' });
+        res.json({ message: 'No expired event to delete' });
       }
     }
   });
@@ -1098,7 +1098,7 @@ router.delete('/api/events/deleteEvent', (req, res) => {
 //count all available events
 router.get('/api/events/count_event', (req, res) => {
   // MySQL query to count alumni
-  const query = 'SELECT COUNT(*) AS event_count FROM Event';
+  const query = 'SELECT COUNT(*) AS event_count FROM event';
 
   client.query(query, (err, results) => {
     if (err) {
@@ -1153,7 +1153,7 @@ router.post('/api/upload', upload.single('file_name'), (req, res) => {
       break;
     case 'certificate':
       uploadDirectory = 'uploads/docs/certs/';
-      sql = 'INSERT INTO Certificates(account_id,certificateName,filePath) values (?,?,?)';
+      sql = 'INSERT INTO certificates(account_id,certificateName,filePath) values (?,?,?)';
       values = [req.body.account_id,req.body.certificateName,req.file.originalname];
       //console.log('Data'+ values)
       break;
@@ -1226,7 +1226,7 @@ router.get('/api/getDocument/:fileType/:id', (req, res) => {
 //count all available alumni
 router.get('/api/count_alumni', (req, res) => {
   // MySQL query to count alumni
-  const query = 'SELECT COUNT(*) AS alumni_count FROM Tut_Alumni';
+  const query = 'SELECT COUNT(*) AS alumni_count FROM tut_alumni';
 
   client.query(query, (err, results) => {
     if (err) {
@@ -1243,17 +1243,17 @@ router.get('/api/count_alumni', (req, res) => {
 
 
 //QUERIES
-//API for sending Query
+//API for sending query
 router.post('/api/queries/send_query', (req, res) => {
 
   const { account_id, query_text, status, date } = req.body;
-  const insertQuery = 'INSERT INTO Query (account_id, query_text, status, date) VALUES (?, ?, ?, ?)';
+  const insertQuery = 'INSERT INTO query (account_id, query_text, status, date) VALUES (?, ?, ?, ?)';
   client.query(insertQuery, [account_id, query_text, status, date], (err, results) => {
     if (err) {
       console.error('Error inserting query:', err);
       res.status(500).json({ error: 'Error inserting query' });
     } else {
-      console.log('Query inserted successfully');
+      console.log('query inserted successfully');
       res.json({ success: true });
     }
 
@@ -1264,13 +1264,13 @@ router.post('/api/queries/send_query', (req, res) => {
 router.post('/api/queries/respond_query', (req, res) => {
 
   const { query_id, query_response } = req.body;
-  const updatetQuery = 'UPDATE Query SET status = "Answered", query_response = ? WHERE query_id = ?';
+  const updatetQuery = 'UPDATE query SET status = "Answered", query_response = ? WHERE query_id = ?';
   client.query(updatetQuery, [query_response, query_id], (err, results) => {
     if (err) {
       console.error('Error updating query:', err);
       res.status(500).json({ error: 'Error updating query' });
     } else {
-      console.log('Query responded successfully');
+      console.log('query responded successfully');
       res.json({ success: true });
     }
 
@@ -1290,9 +1290,9 @@ router.get('/api/queries/get_queries', (req, res) => {
     t.name AS alumni_name,
     t.surname AS alumni_surname
   FROM
-    Query q
+    query q
   JOIN
-    Tut_Alumni t ON q.account_id = t.account_id;
+    tut_alumni t ON q.account_id = t.account_id;
 `;
   client.query(sqlQuery, (err, result) => {
     if (err) {
@@ -1311,13 +1311,13 @@ router.get('/api/queries/get_queries', (req, res) => {
 
 
 //Connections
-//1.Create Connection
+//1.Create connection
 router.post('/api/connections', (req, res) => {
   const { follower_id, following_id, status } = req.body;
 
   // Check if the connection exists
   client.query(
-    'SELECT * FROM Connection WHERE follower_id = ? AND following_id = ?',
+    'SELECT * FROM connection WHERE follower_id = ? AND following_id = ?',
     [follower_id, following_id],
     (err, results) => {
       if (err) {
@@ -1326,12 +1326,12 @@ router.post('/api/connections', (req, res) => {
       }
 
       if (results.length > 0) {
-        return res.status(400).json({ message: 'Connection already exists.' });
+        return res.status(400).json({ message: 'connection already exists.' });
       }
 
       // Create a new connection
       client.query(
-        'INSERT INTO Connection (follower_id, following_id, status) VALUES (?, ?, ?)',
+        'INSERT INTO connection (follower_id, following_id, status) VALUES (?, ?, ?)',
         [follower_id, following_id, status],
         (err, result) => {
           if (err) {
@@ -1352,7 +1352,7 @@ router.get('/api/connections/followers/:account_id/count', (req, res) => {
 
   // Count the number of followers
   client.query(
-    'SELECT COUNT(*) as followerCount FROM Connection WHERE following_id = ?',
+    'SELECT COUNT(*) as followerCount FROM connection WHERE following_id = ?',
     [account_id],
     (err, results) => {
       if (err) {
@@ -1373,7 +1373,7 @@ router.get('/api/connections/following/:account_id/count', (req, res) => {
 
   // Count the number of following
   client.query(
-    'SELECT COUNT(*) as followingCount FROM Connection WHERE follower_id = ?',
+    'SELECT COUNT(*) as followingCount FROM connection WHERE follower_id = ?',
     [account_id],
     (err, results) => {
       if (err) {
@@ -1388,14 +1388,14 @@ router.get('/api/connections/following/:account_id/count', (req, res) => {
   );
 });
 
-// 4. Update Connection Status
+// 4. Update connection Status
 router.patch('/api/connections/:connection_id/status', (req, res) => {
   const connection_id = req.params.connection_id;
   const { status } = req.body;
 
   // Update the connection status
   client.query(
-    'UPDATE Connection SET status = ? WHERE connection_id = ?',
+    'UPDATE connection SET status = ? WHERE connection_id = ?',
     [status, connection_id],
     (err, result) => {
       if (err) {
@@ -1404,23 +1404,23 @@ router.patch('/api/connections/:connection_id/status', (req, res) => {
       }
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: 'Connection not found.' });
+        return res.status(404).json({ message: 'connection not found.' });
       }
 
-      return res.json({ message: 'Connection status updated successfully.' });
+      return res.json({ message: 'connection status updated successfully.' });
     }
   );
 });
 
 
-//NOTIFICATIONS
+//notifications
 //send Notifications
 router.post('/api/notifications/send',(req, res) =>{
   //get variables
   const {sender_id, receiver_id, message, date} = req.body;
 
   //sql
-  const sql = 'INSERT INTO NOTIFICATIONS(sender,receiver,message,DATE) VALUES (?,?,?,?)'
+  const sql = 'INSERT INTO notifications(sender,receiver,message,DATE) VALUES (?,?,?,?)'
 
   //query
   client.query(sql, [sender_id,receiver_id,message,date], (err, result) => {
@@ -1454,8 +1454,8 @@ router.get('/api/notifications/get_my_notifications/:account_id', (req,res) =>{
     n.date,
     u.pic_file AS sender_pic
   FROM NotificationS n
-  LEFT JOIN Tut_Alumni a ON n.sender = a.account_id
-  LEFT JOIN UserProfile u ON n.sender = u.account_id
+  LEFT JOIN tut_alumni a ON n.sender = a.account_id
+  LEFT JOIN userprofile u ON n.sender = u.account_id
   WHERE n.receiver = ?
 `;
 
