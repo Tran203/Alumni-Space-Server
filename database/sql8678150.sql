@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2023 at 12:54 PM
+-- Generation Time: Dec 12, 2023 at 08:02 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sql8669541`
+-- Database: `sql8678150`
 --
 
 -- --------------------------------------------------------
@@ -68,7 +68,8 @@ INSERT INTO `alumni_space_account` (`account_id`, `email`, `password`, `role`) V
 (7, 'mnisi@gmail.com', '123', 'Alumni'),
 (8, 'mnyalo@gmail.com', '123', 'Alumni'),
 (9, 'mashao@gmail.com', '123', 'Alumni'),
-(10, 'lehlojane@gmail.com', '123', 'Alumni');
+(10, 'lehlojane@gmail.com', '123', 'Alumni'),
+(12, 'manasoeDJ@tut.ac.za', '12345', 'Alumni');
 
 -- --------------------------------------------------------
 
@@ -99,6 +100,13 @@ CREATE TABLE `certificates` (
   `certificateName` varchar(255) DEFAULT NULL,
   `filePath` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `certificates`
+--
+
+INSERT INTO `certificates` (`certificateId`, `account_id`, `certificateName`, `filePath`) VALUES
+(1, 12, 'aws', 'aws.pdf');
 
 -- --------------------------------------------------------
 
@@ -245,7 +253,8 @@ INSERT INTO `tut_alumni` (`alumni_id`, `account_id`, `name`, `surname`) VALUES
 (7, 8, 'Noxolo', 'Mnyalo'),
 (8, 2, 'Elias', 'Mashia'),
 (9, 9, 'Kgaogelo', 'Mashao'),
-(10, 10, 'Kabelo', 'Lehlojane');
+(10, 10, 'Kabelo', 'Lehlojane'),
+(12, 12, 'Dipono Joel', 'Manasoe');
 
 -- --------------------------------------------------------
 
@@ -279,7 +288,8 @@ INSERT INTO `userprofile` (`user_id`, `account_id`, `location`, `qualification`,
 (6, 4, 'Pretoria', 'Diploma', 'UnEmployed', 'Analytical Thinking,Legal Knowledge,AdvocacyTime M', '3 years', 'Criminal Law', ' hackerthon Master', 'Berlinah.jpg'),
 (7, 8, '', '', '', '', '', '', '', ''),
 (8, 9, '', '', '', '', '', '', '', 'Kgaogelo.jpg'),
-(9, 10, '', '', '', '', '', '', '', '');
+(9, 10, '', '', '', '', '', '', '', ''),
+(10, 12, 'Soshanguve', 'Diploma In Information Technology, Software Development', 'Employed', 'Node.js, Angular, AWS, React', '3 years and above', 'Software Developement', 'Software Developer And Lead Team', 'dipono.jpeg');
 
 --
 -- Indexes for dumped tables
@@ -378,7 +388,7 @@ ALTER TABLE `administrator`
 -- AUTO_INCREMENT for table `alumni_space_account`
 --
 ALTER TABLE `alumni_space_account`
-  MODIFY `account_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `account_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `applications`
@@ -390,7 +400,7 @@ ALTER TABLE `applications`
 -- AUTO_INCREMENT for table `certificates`
 --
 ALTER TABLE `certificates`
-  MODIFY `certificateId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `certificateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `connection`
@@ -438,13 +448,13 @@ ALTER TABLE `query`
 -- AUTO_INCREMENT for table `tut_alumni`
 --
 ALTER TABLE `tut_alumni`
-  MODIFY `alumni_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `alumni_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `userprofile`
 --
 ALTER TABLE `userprofile`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,0 +1,8 @@
+npm start -- -H server-ip-
+
+
+Server: sql8.freemysqlhosting.net
+Name: sql8678150
+Username: sql8678150
+Password: v5S8La6HLQ
+Port number: 3306
