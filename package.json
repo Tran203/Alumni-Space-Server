@@ -14,6 +14,6 @@
     "uuid": "^9.0.1"
   },
   "scripts": {
-    "start": " concurrently \"node app.js\" \"json-server --watch post.json --port 3002\""
+    "start": "concurrently \"node app.js\" \"json-server --watch post.json --port 3002\""
   }
 }
