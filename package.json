@@ -14,8 +14,6 @@
     "uuid": "^9.0.1"
   },
   "scripts": {
-    "start-server": "json-server --watch post.json --port 3002",
-    "start-app": "node app.js",
-    "start": "npm run start-server & npm run start-app"
+    "start": "node app.js & json-server --watch post.json --host https://shy-jade-goshawk-hose.cyclic.app --port 3002"
   }
 }
