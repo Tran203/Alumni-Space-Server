@@ -8,3 +8,5 @@ Password: v5S8La6HLQ
 Port number: 3306
 
 https://shy-jade-goshawk-hose.cyclic.app/
+
+https://erin-gorgeous-lizard.cyclic.app
